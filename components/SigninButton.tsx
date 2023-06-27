@@ -7,9 +7,8 @@ const SigninButton = () => {
     const { data: session } = useSession()
     if (session && session.user)
         return (
-            <div>
-                <button onClick={() => signOut()} className="btn btn-error">Sign Out: {session.user.name}</button>
-            </div>
+            <button onClick={() => signOut()} className="btn btn-error">Sign Out</button>
+
         )
     return (
         <div>
