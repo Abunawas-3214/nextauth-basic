@@ -11,6 +11,8 @@ const Navbar = () => {
                 <ul className="menu menu-horizontal px-1">
                     <li><Link href="/client">Client Component</Link></li>
                     <li><Link href="/server">Server Component</Link></li>
+                    <li><Link href="/user">User Component</Link></li>
+                    <li><Link href="/admin">Admin Component</Link></li>
                 </ul>
             </div>
             <div className="navbar-end">

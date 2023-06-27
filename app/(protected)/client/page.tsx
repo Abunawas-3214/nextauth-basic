@@ -1,13 +1,9 @@
 'use client'
 import { useSession } from "next-auth/react"
-import { redirect } from "next/navigation"
 
 const Client = () => {
     const { data: session } = useSession({
-        required: true,
-        onUnauthenticated: () => {
-            redirect('/login?callbackUrl=/client')
-        }
+        required: true
     })
 
     return (
@@ -17,7 +13,7 @@ const Client = () => {
                     <div>
                         <h1 className="text-5xl font-bold">Client Component</h1>
                         <p className="py-6">Ini adalah sebuah pages dengan client komponen di dalamnya.</p>
-                        <button className="btn btn-primary">Selamat Dattang {session?.user?.name}</button>
+                        <button className="btn btn-primary">Selamat Datang {session?.user?.name}</button>
                     </div>
                 </div>
             </div>

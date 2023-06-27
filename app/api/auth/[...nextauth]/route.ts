@@ -1,7 +1,15 @@
 import NextAuth from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
 
-export const authOptions = {
+const prisma = new PrismaClient()
+
+export const authOptions: NextAuthOptions = {
+    adapter: PrismaAdapter(
+        prisma
+    ),
     providers: [
         CredentialsProvider({
             // The name to display on the sign in form (e.g. "Sign in with...")
@@ -29,7 +37,7 @@ export const authOptions = {
 
                 const user = await res.json()
 
-                if (user) {
+                if (user && res.ok) {
                     // Any object returned will be saved in `user` property of the JWT
                     return user
                 } else {
@@ -43,6 +51,35 @@ export const authOptions = {
     ],
     pages: {
         signIn: '/login'
+    },
+    session: {
+        strategy: 'jwt'
+    },
+    callbacks: {
+        async session({ token, session }) {
+            if (token) {
+                session.user.name = token.name
+                session.user.email = token.email
+                session.user.role = token.role
+            }
+            return session
+        },
+        async jwt({ token, user }) {
+            const dbUser = await prisma.user.findFirst({
+                where: {
+                    email: token.email
+                }
+            })
+            if (!dbUser) {
+                token.id = user!.id
+                return token
+            }
+            return {
+                name: dbUser.name,
+                email: dbUser.email,
+                role: dbUser.role
+            }
+        }
     }
 }
 
