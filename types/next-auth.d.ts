@@ -1,4 +1,4 @@
-import { User } from "next-auth";
+import { User, Account } from "next-auth";
 import { Role } from "@prisma/client"
 
 declare module "next-auth/jwt" {

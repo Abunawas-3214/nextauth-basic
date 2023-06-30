@@ -1,10 +1,13 @@
 'use client'
 import { useState, SyntheticEvent } from 'react'
-import { getProviders, signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { getProviders, signIn, useSession } from 'next-auth/react'
+import { redirect, useRouter, useSearchParams } from 'next/navigation'
 
 const LoginPage = () => {
-    const router = useRouter()
+    const { data: session } = useSession()
+    if (session) {
+        return redirect('/')
+    }
 
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -31,25 +34,20 @@ const LoginPage = () => {
                     <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
-                                <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text">Email</span>
-                                    </label>
-                                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="email" className="input input-bordered" />
+                                <div className="form-control mt-6">
+                                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="email" className="input input-bordered" required />
                                 </div>
-                                <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text">Password</span>
-                                    </label>
-                                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" className="input input-bordered" />
-                                    <label className="label">
-                                        <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
-                                    </label>
+                                <div className="form-control mt-4">
+                                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="password" className="input input-bordered" required />
                                 </div>
                                 <div className="form-control mt-6">
-                                    <button type="submit" className="btn btn-primary">Login</button>
+                                    <button type="submit" className="btn btn-primary">Masuk dengan Email</button>
                                 </div>
                             </form>
+                            <div className="divider"></div>
+                            <div className="form-control">
+                                <button onClick={() => signIn('google')} className="btn btn-primary">Masuk dengan Google</button>
+                            </div>
                         </div>
                     </div>
                 </div>

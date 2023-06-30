@@ -7,10 +7,10 @@ import { redirect } from "next/navigation"
 const Admin = async () => {
 
     const session = await getServerSession(authOptions)
-    console.log(session)
+    // console.log(session)
 
     if (session?.user.role !== 'ADMIN') {
-        return redirect('/login?callbackUrl=/server')
+        return redirect('/auth/error?callbackUrl=/server')
     }
 
     return (

@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import { cookies } from "next/dist/client/components/headers";
+import { error } from "console";
 
 const prisma = new PrismaClient()
 
@@ -47,15 +50,32 @@ export const authOptions: NextAuthOptions = {
                     // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
             }
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
         })
     ],
     pages: {
-        signIn: '/login'
+        signIn: '/auth/login',
+        error: '/auth/error'
     },
     session: {
         strategy: 'jwt'
     },
     callbacks: {
+        async signIn({ user, account, profile, email, credentials }) {
+            if (account?.provider === 'google') {
+                if (profile?.email?.endsWith('@student.uin-malang.ac.id')) {
+                    console.log(profile.email)
+                    return true
+                } else {
+                    return false
+                }
+            }
+            return true
+
+        },
         async session({ token, session }) {
             if (token) {
                 session.user.name = token.name

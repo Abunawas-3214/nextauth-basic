@@ -6,7 +6,7 @@ const Server = async () => {
     const session = await getServerSession(authOptions)
     console.log(session)
     if (!session) {
-        return redirect('/login?callbackUrl=/server')
+        return redirect('/auth/login?callbackUrl=/server')
     }
 
     return (

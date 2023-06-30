@@ -5,6 +5,7 @@ import Link from "next/link"
 
 export default async function Home() {
   const session = await getServerSession(authOptions)
+
   return (
     <main>
       <Navbar />
@@ -15,7 +16,7 @@ export default async function Home() {
               <div>
                 <h1 className="text-5xl font-bold">Welcome</h1>
                 <p className="py-6">Kamu masih belum masuk nih, masuk yuk.</p>
-                <Link href={'/login?callbackUrl=/server'} className="btn btn-primary">Masuk</Link>
+                <Link href={'/auth/login?callbackUrl=/server'} className="btn btn-primary">Masuk</Link>
               </div>
               :
               <div>
